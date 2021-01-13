@@ -1,7 +1,8 @@
 const axios = require("axios");
 
-const hifiniCookie = process.env.HIFINI_COOKIE;
 const sckey = process.env.SERVER_CHAN_SCKEY;
+const hifiniCookie = process.env.HIFINI_COOKIE;
+const v2exCookie = process.env.V2EX_COOKIE;
 
 function serverChan(msg) {
     const url = `https://sc.ftqq.com/${sckey}.send`
@@ -49,10 +50,60 @@ const signers = [
                     })
             });
         }
-    }
+    },
+    {
+        desc: 'V2EX',
+        action: (name) => {
+            const REG = {
+                SIGN_SUCCESS: /已成功领取每日登录奖励/,
+                SIGNED: /每日登录奖励已领取/,
+                ONCE_PATTERN: /redeem\?once=(.*?)'/,
+            }
+            const checkUrl = 'https://www.v2ex.com/mission/daily'
+            const signURL = once => `${checkUrl}/redeem?once=${once}`
+            const config = {
+                headers: {
+                    Referer: "https://www.v2ex.com/mission",
+                    Host: "www.v2ex.com",
+                    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+                    cookie: v2exCookie,
+                },
+            };
+            return new Promise((resolve, reject) => {
+                axios.get(checkUrl, config)
+                    .then(({ data }) => {
+                        if (REG.SIGNED.test(String(data))) {
+                            resolve({ name, state: 'SIGNED' })
+                            return
+                        }
+                        if (REG.ONCE_PATTERN.test(String(data))) {
+                            return data.match(REG.ONCE_PATTERN)[1]
+                        }
+                        reject({ name, state: 'FAILED' })
+                    })
+                    .then(once => {
+                        if (once) {
+                            axios.get(signURL(once), config)
+                                .then(({ data }) => {
+                                    if (REG.SIGN_SUCCESS.test(String(data))) {
+                                        resolve({ name, state: 'SUCCESS' })
+                                    }
+                                    reject({ name, state: 'FAILED' })
+                                })
+                                .catch(err => {
+                                    reject({ name, state: 'FAILED' })
+                                })
+                        }
+                    })
+                    .catch(err => {
+                        reject({ name, state: 'FAILED' })
+                    })
+            });
+        }
+    },
 ]
 
-function runSign() {
+function run() {
     const actionList = signers.map(s => s.action(s.desc))
     Promise.allSettled(actionList)
         .then(results => {
@@ -69,4 +120,4 @@ function runSign() {
         })
 }
 
-runSign()
+run()
