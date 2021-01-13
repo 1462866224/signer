@@ -60,7 +60,6 @@ const signers = [
                 ONCE_PATTERN: /redeem\?once=(.*?)'/,
             }
             const checkUrl = 'https://www.v2ex.com/mission/daily'
-            const signURL = once => `${checkUrl}/redeem?once=${once}`
             const config = {
                 headers: {
                     Referer: "https://www.v2ex.com/mission",
@@ -83,7 +82,7 @@ const signers = [
                     })
                     .then(once => {
                         if (once) {
-                            axios.get(signURL(once), config)
+                            axios.get(`${checkUrl}/redeem?once=${once}`, config)
                                 .then(({ data }) => {
                                     if (REG.SIGN_SUCCESS.test(String(data))) {
                                         resolve({ name, state: 'SUCCESS' })
