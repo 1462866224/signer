@@ -1,0 +1,26 @@
+{
+  "name": "signer",
+  "version": "1.0.0",
+  "description": "a script to run sign",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s0urcelab/signer.git"
+  },
+  "keywords": [
+    "signer"
+  ],
+  "author": "s0urce",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/s0urcelab/signer/issues"
+  },
+  "homepage": "https://github.com/s0urcelab/signer#readme",
+  "scripts": {
+    "dev": "node --inspect-brk index.js",
+    "build": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}
