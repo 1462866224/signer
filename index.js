@@ -1,11 +1,11 @@
 const axios = require("axios");
 
-const sckey = process.env.SERVER_CHAN_SCKEY;
-const hifiniCookie = process.env.HIFINI_COOKIE;
-const v2exCookie = process.env.V2EX_COOKIE;
+const SERVER_CHAN_SCKEY = process.env.SERVER_CHAN_SCKEY;
+const HIFINI_COOKIE = process.env.HIFINI_COOKIE;
+const V2EX_COOKIE = process.env.V2EX_COOKIE;
 
 function serverChan(msg) {
-    const url = `https://sc.ftqq.com/${sckey}.send`
+    const url = `https://sc.ftqq.com/${SERVER_CHAN_SCKEY}.send`
     axios.post(url, `text=今日签到结果&desp=${msg}`)
         .then(res => {
             if (res.data.errmsg === 'success') {
@@ -21,7 +21,7 @@ const signers = [
         desc: 'hifini音乐磁场',
         action: (name) => {
             // 无cookie跳过
-            if (!hifiniCookie) {
+            if (!HIFINI_COOKIE) {
                 return Promise.reject({ name, state: 'BYPASS' })
             }
 
@@ -36,7 +36,7 @@ const signers = [
                     Referer: "https://www.hifini.com",
                     Host: "www.hifini.com",
                     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-                    cookie: hifiniCookie,
+                    cookie: HIFINI_COOKIE,
                 },
             };
             return new Promise((resolve, reject) => {
@@ -60,7 +60,11 @@ const signers = [
         desc: 'V2EX',
         action: (name) => {
             // 无cookie跳过
-            if (!v2exCookie) {
+
+            console.log(V2EX_COOKIE, "V2EX_COOKIE")
+            
+            if (!V2EX_COOKIE) {
+                console.log('不应该进来')
                 return Promise.reject({ name, state: 'BYPASS' })
             }
 
@@ -75,7 +79,7 @@ const signers = [
                     Referer: "https://www.v2ex.com/mission",
                     Host: "www.v2ex.com",
                     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-                    cookie: v2exCookie,
+                    cookie: V2EX_COOKIE,
                 },
             };
             return new Promise((resolve, reject) => {
