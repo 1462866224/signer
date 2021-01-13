@@ -1,5 +1,5 @@
 name: signer
- 
+
 on:
     push:
         branches:
@@ -9,7 +9,7 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
- 
+
         steps:
             - name: Checkout codes
               uses: actions/checkout@v2
@@ -23,3 +23,4 @@ jobs:
               env:
                 SERVER_CHAN_SCKEY: ${{ secrets.SERVER_CHAN_SCKEY }}
                 HIFINI_COOKIE: ${{ secrets.HIFINI_COOKIE }}
+                V2EX_COOKIE: ${{ secrets.V2EX_COOKIE }}
