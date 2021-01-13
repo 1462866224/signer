@@ -20,6 +20,11 @@ const signers = [
     {
         desc: 'hifini音乐磁场',
         action: (name) => {
+            // 无cookie跳过
+            if (!hifiniCookie) {
+                return Promise.reject({ name, state: 'BYPASS' })
+            }
+
             const REG = {
                 SIGN_SUCCESS: /成功签到！/,
                 SIGNED: /今天已经签过啦！/,
@@ -54,6 +59,11 @@ const signers = [
     {
         desc: 'V2EX',
         action: (name) => {
+            // 无cookie跳过
+            if (!v2exCookie) {
+                return Promise.reject({ name, state: 'BYPASS' })
+            }
+
             const REG = {
                 SIGN_SUCCESS: /已成功领取每日登录奖励/,
                 SIGNED: /每日登录奖励已领取/,
@@ -109,10 +119,12 @@ function run() {
             const success = results.filter(v => v.status === 'fulfilled' && v.value.state === 'SUCCESS')
             const signed = results.filter(v => v.status === 'fulfilled' && v.value.state === 'SIGNED')
             const failed = results.filter(v => v.status === 'rejected' && v.reason.state === 'FAILED')
+            const bypass = results.filter(v => v.status === 'rejected' && v.reason.state === 'BYPASS')
             const noticeStr = `
             签到成功：${success.map(v => v.value.name).join('，')}
             重复签到：${signed.map(v => v.value.name).join('，')}
             签到失败：${failed.map(v => v.reason.name).join('，')}
+            已跳过：${bypass.map(v => v.reason.name).join('，')}
             `
             // 推送消息
             serverChan(noticeStr)
