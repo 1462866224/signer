@@ -1,8 +1,8 @@
 import axios from 'axios'
 const SERVER_CHAN_SCKEY = process.env.SERVER_CHAN_SCKEY;
 
-import v2ex from './scripts/v2ex'
-import hifini from './scripts/hifini'
+import v2ex from './scripts/v2ex.js'
+import hifini from './scripts/hifini.js'
 
 const actionList = [v2ex, hifini]
 
