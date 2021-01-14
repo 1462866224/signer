@@ -20,7 +20,7 @@ function serverChan(msg) {
 
 ;(async () => {
     const results = await Promise.allSettled(actionList.map(action => action()))
-    
+
     const success = results.filter(v => v.status === 'fulfilled' && v.value.state === 'SUCCESS')
     const signed = results.filter(v => v.status === 'fulfilled' && v.value.state === 'SIGNED')
     const failed = results.filter(v => v.status === 'rejected' && v.reason.state === 'FAILED')
