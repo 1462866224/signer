@@ -19,7 +19,7 @@ jobs:
                 node-version: '12.x'
             - name: Run
               run: npm install
-            - run: node index.js
+            - run: npm run build
               env:
                 SERVER_CHAN_SCKEY: ${{ secrets.SERVER_CHAN_SCKEY }}
                 HIFINI_COOKIE: ${{ secrets.HIFINI_COOKIE }}

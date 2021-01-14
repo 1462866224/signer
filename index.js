@@ -112,23 +112,20 @@ const signers = [
     },
 ]
 
-function run() {
+;(async () => {
     const actionList = signers.map(s => s.action(s.desc))
-    Promise.allSettled(actionList)
-        .then(results => {
-            const success = results.filter(v => v.status === 'fulfilled' && v.value.state === 'SUCCESS')
-            const signed = results.filter(v => v.status === 'fulfilled' && v.value.state === 'SIGNED')
-            const failed = results.filter(v => v.status === 'rejected' && v.reason.state === 'FAILED')
-            const bypass = results.filter(v => v.status === 'rejected' && v.reason.state === 'BYPASS')
-            const noticeStr = `
+    const results = await Promise.allSettled(actionList)
+
+    const success = results.filter(v => v.status === 'fulfilled' && v.value.state === 'SUCCESS')
+    const signed = results.filter(v => v.status === 'fulfilled' && v.value.state === 'SIGNED')
+    const failed = results.filter(v => v.status === 'rejected' && v.reason.state === 'FAILED')
+    const bypass = results.filter(v => v.status === 'rejected' && v.reason.state === 'BYPASS')
+    const noticeStr = `
             签到成功：${success.map(v => v.value.name).join('，')}
             重复签到：${signed.map(v => v.value.name).join('，')}
             签到失败：${failed.map(v => v.reason.name).join('，')}
             已跳过：${bypass.map(v => v.reason.name).join('，')}
             `
-            // 推送消息
-            serverChan(noticeStr)
-        })
-}
-
-run()
+    // 推送消息
+    serverChan(noticeStr)
+})()
