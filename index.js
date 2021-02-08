@@ -7,8 +7,8 @@ import hifini from './scripts/hifini.js'
 const actionList = [v2ex, hifini]
 
 function serverChan(msg) {
-    const url = `https://sc.ftqq.com/${SERVER_CHAN_SCKEY}.send`
-    axios.post(url, `text=今日签到结果&desp=${msg}`)
+    const url = `https://sctapi.ftqq.com/${SERVER_CHAN_SCKEY}.send`
+    axios.post(url, `title=今日签到结果&desp=${msg}`)
         .then(res => {
             if (res.data.errmsg === 'success') {
                 return console.log('消息推送成功')
