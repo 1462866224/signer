@@ -16,3 +16,4 @@
 | SERVER_CHAN_SCKEY | server酱的sckey | 必须 |
 | HIFINI_COOKIE | hifini音乐磁场的cookie | 可选 |
 | V2EX_COOKIE | V2EX的cookie | 可选 |
+.
