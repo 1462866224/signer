@@ -1,4 +1,4 @@
-# 基于Github Actions的签到脚本。
+# 基于Github Actions的签到脚本，
 ## 支持站点列表
 - [x] hifini音乐磁场
 - [x] V2EX
